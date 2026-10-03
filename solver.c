@@ -5,14 +5,14 @@
 
 enum {
     CUBIES = 7,
-    PERMUTATIONS = 5040,
-    ORIENTATIONS = 729,
+    PERMUTATIONS = 5040,  //其餘7個角快的位置 7!
+    ORIENTATIONS = 729,   //3^6 = 729
     STATES = PERMUTATIONS * ORIENTATIONS,
-    MOVES = 9
+    MOVES = 9 //有三面，每面有3種轉法 因此3*3 =9
 };
 
 typedef struct {
-    uint8_t p[CUBIES], o[CUBIES];
+    uint8_t p[CUBIES], o[CUBIES]; //permutation,orientation
 } state_t;
 
 /*@ predicate valid_state(state_t *state) =
@@ -28,12 +28,12 @@ static const char *const move_names[MOVES] = {"R",  "R2", "R'", "B", "B2",
                                               "B'", "D",  "D2", "D'"};
 static const uint8_t inverse_move[MOVES] = {2, 1, 0, 5, 4, 3, 8, 7, 6};
 /* Each destination takes a cubie from source[face][destination]. */
-static const uint8_t source[3][CUBIES] = {
+static const uint8_t source[3][CUBIES] = { //位置怎麼換
     {1, 4, 2, 0, 3, 5, 6},
     {0, 1, 2, 4, 5, 6, 3},
     {0, 2, 5, 3, 1, 4, 6},
 };
-static const uint8_t twist[3][CUBIES] = {
+static const uint8_t twist[3][CUBIES] = { //方向怎麼換
     {1, 2, 0, 2, 1, 0, 0},
     {0, 0, 0, 1, 2, 1, 2},
     {0, 0, 0, 0, 0, 0, 0},
@@ -47,7 +47,7 @@ static const uint8_t twist[3][CUBIES] = {
     ensures \forall integer i; 0 <= i < CUBIES ==>
               \result.o[i] == (state.o[source[face][i]] + twist[face][i]) % 3;
  */
-static state_t quarter_turn(state_t state, uint8_t face)
+static state_t quarter_turn(state_t state, uint8_t face) //執行一次 90° 旋轉
 {
     state_t result;
     /*@ loop invariant 0 <= i <= CUBIES;
@@ -84,7 +84,7 @@ static state_t apply_move(state_t state, uint8_t move)
     assigns \nothing;
     ensures \result < STATES;
  */
-static uint32_t rank_state(const state_t *state)
+static uint32_t rank_state(const state_t *state) //將一個 cube state 轉成唯一整數 index。
 {
     uint32_t p = 0, o = 0;
     /*@ loop invariant 0 <= i <= CUBIES;
@@ -121,7 +121,7 @@ static uint32_t rank_state(const state_t *state)
 }
 
 /*@ requires \valid(state); requires rank < STATES; assigns *state; */
-static void unrank_state(uint32_t rank, state_t *state)
+static void unrank_state(uint32_t rank, state_t *state) //將一個 index 轉成唯一整數 cube state 。
 {
     uint8_t available[CUBIES] = {0, 1, 2, 3, 4, 5, 6};
     uint32_t p = rank / ORIENTATIONS, o = rank % ORIENTATIONS, f = 720;
@@ -188,7 +188,7 @@ static int valid(const state_t *state)
     return sum % 3U == 0;
 }
 
-static uint8_t *build_table(uint8_t *diameter)
+static uint8_t *build_table(uint8_t *diameter) //核心
 {
     uint8_t *toward_solved = malloc(STATES);
     uint32_t *queue = malloc((size_t) STATES * sizeof *queue);
@@ -231,8 +231,8 @@ static uint8_t *build_table(uint8_t *diameter)
         for (uint8_t face = 0; face < 3; ++face) {
             uint16_t next_p = p, next_o = o;
             for (uint8_t turn = 0; turn < 3; ++turn) {
-                next_p = permutation[face][next_p];
-                next_o = orientation[face][next_o];
+                next_p = permutation[face][next_p];//轉魔術方塊
+                next_o = orientation[face][next_o];//轉魔術方塊
                 uint32_t there = (uint32_t) next_p * ORIENTATIONS + next_o;
                 if (toward_solved[there] == UINT8_MAX) {
                     uint8_t move = (uint8_t) (face * 3U + turn);
