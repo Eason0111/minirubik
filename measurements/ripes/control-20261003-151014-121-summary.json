@@ -1,0 +1,13 @@
+﻿{
+    "Case":  "control",
+    "RipesVersion":  "v2.2.6-106-g5b8a616",
+    "Processor":  "RV32_ISS",
+    "GuestBytes":  1024,
+    "SampleCount":  26,
+    "Last5PrivateBytesMean":  4788224,
+    "Last5PrivateBytesMin":  4788224,
+    "Last5PrivateBytesMax":  4788224,
+    "ExpectedTimeoutObserved":  true,
+    "SamplesFile":  "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\control-20261003-151014-121-samples.csv",
+    "SourceSha256":  "1E6A7343F44AB87F625B2B404707BAC3DEC2C95A3B864765C5E2BA06876A598D"
+}

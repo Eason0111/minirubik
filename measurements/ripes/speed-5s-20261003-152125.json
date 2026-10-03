@@ -1,0 +1,10 @@
+{
+    "# instructions retired": 1048580,
+    "execution time (ms)": 7682,
+    "runinfo": {
+        "ISA extensions": [
+        ],
+        "processor": "RV32_5S",
+        "source file": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\speed-memory.s"
+    }
+}

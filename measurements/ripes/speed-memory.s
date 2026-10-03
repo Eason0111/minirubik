@@ -1,0 +1,13 @@
+.text
+main:
+    li t0, 0x20000000
+    li t1, 262144
+
+write_loop:
+    sw zero, 0(t0)
+    addi t0, t0, 4
+    addi t1, t1, -1
+    bne t1, zero, write_loop
+
+    li a7, 10
+    ecall
