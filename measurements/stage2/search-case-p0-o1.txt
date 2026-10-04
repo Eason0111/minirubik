@@ -1,0 +1,18 @@
+Tables loaded: position=5040, orientation=729 bytes
+Position bound=0, orientation bound=5
+Combined bound=5, initial search limit=5
+Root: p=0, o=1, next_move=0
+Stack=72 bytes, path=11 bytes
+No solution within 5 moves
+Trying limit 6
+No solution within 6 moves
+Trying limit 7
+No solution within 7 moves
+Trying limit 8
+No solution within 8 moves
+Trying limit 9
+No solution within 9 moves
+Trying limit 10
+Solved at depth 10
+Moves: R D2 B2 R' B' R B' D R' B
+Replay final rank=0: PASS
