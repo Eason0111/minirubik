@@ -13,6 +13,13 @@ typedef struct {
 
 static Frame stack[12];
 static uint8_t path[11];
+static const uint8_t move_face[9] = {
+    0, 0, 0, 1, 1, 1, 2, 2, 2
+};
+
+static const uint8_t move_turns[9] = {
+    1, 2, 3, 1, 2, 3, 1, 2, 3
+};
 static uint8_t position_dist[5040];
 static uint8_t orientation_dist[729];
 
@@ -60,7 +67,14 @@ static void init_transitions(void)
 static int check_transitions(void)
 {
     unsigned checked = 0;
-
+        for (unsigned move = 0; move < MOVES; ++move) {
+        if (move_face[move] != move / 3 ||
+            move_turns[move] != move % 3 + 1) {
+            fprintf(stderr, "Move mapping FAIL: move=%u\n", move);
+            return 0;
+        }
+    }
+    puts("Move mapping checks=9: PASS");
     for (unsigned kind = 0; kind < 2; ++kind) {
         unsigned count = kind == 0 ? PERMUTATIONS : ORIENTATIONS;
 
@@ -154,11 +168,13 @@ static int solve_rank(uint32_t input_rank, SearchCounts *counts, int verbose)
         }
         ++counts->attempted;
         uint8_t move = stack[depth].next_move++;
-        if (depth > 0 && move / 3 == path[depth - 1] / 3)
+        uint8_t face = move_face[move];
+
+        if (depth > 0 && face == move_face[path[depth - 1]])
             continue;
+
         ++counts->generated;
-        uint8_t face = move / 3;
-        uint8_t turns = move % 3 + 1;
+        uint8_t turns = move_turns[move];
         uint16_t next_p = stack[depth].p;
         uint16_t next_o = stack[depth].o;
         for (uint8_t turn = 0; turn < turns; ++turn) {
