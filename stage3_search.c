@@ -54,11 +54,59 @@ static void init_transitions(void)
         }
     }
 }
-int main(void)
+static int check_transitions(void)
+{
+    unsigned checked = 0;
+
+    for (unsigned kind = 0; kind < 2; ++kind) {
+        unsigned count = kind == 0 ? PERMUTATIONS : ORIENTATIONS;
+
+        for (unsigned rank = 0; rank < count; ++rank) {
+            state_t state;
+            uint32_t full_rank =
+                kind == 0 ? rank * ORIENTATIONS : rank;
+            unrank_state(full_rank, &state);
+
+            for (uint8_t move = 0; move < MOVES; ++move) {
+                /* 原始函式算出的參考結果。 */
+                state_t next = apply_move(state, move);
+                uint32_t encoded = rank_state(&next);
+                unsigned expected = kind == 0
+                    ? encoded / ORIENTATIONS
+                    : encoded % ORIENTATIONS;
+
+                /* 轉移表算出的結果。 */
+                unsigned actual = rank;
+                unsigned face = move / 3;
+                unsigned turns = move % 3 + 1;
+
+                for (unsigned t = 0; t < turns; ++t) {
+                    actual = kind == 0
+                        ? permutation[face][actual]
+                        : orientation[face][actual];
+                }
+
+                if (actual != expected) {
+                    printf("Transition FAIL: kind=%u rank=%u move=%u\n",
+                           kind, rank, (unsigned)move);
+                    return 0;
+                }
+                ++checked;
+            }
+        }
+    }
+
+    printf("Transition checks=%u: PASS\n", checked);
+    return 1;
+}
+
+int main(int argc, char **argv)
 {
     unsigned depth = 0;
     init_transitions();
-   unsigned long long attempted = 0;
+        if (!check_transitions())
+        return 1;
+  unsigned long long attempted = 0;
     unsigned long long generated = 0;
     unsigned long long heuristic_pruned = 0;
     if (!load_table("measurements/stage2/position-dist.bin",
@@ -71,9 +119,18 @@ int main(void)
 
     printf("Tables loaded: position=%zu, orientation=%zu bytes\n",
            sizeof position_dist, sizeof orientation_dist);
-    /* 先用已解狀態測試根節點。 */
-    stack[0].p = 0;
-    stack[0].o = 1;
+    /* 解析輸入狀態，初始化搜尋根節點。 */
+        const char *input = argc == 2 ? argv[1] : "12345671111123";
+    state_t start;
+
+    if (argc > 2 || !parse_state(input, &start)) {
+        fputs("Expected a valid 14-character cube state\n", stderr);
+        return 1;
+    }
+
+    uint32_t input_rank = rank_state(&start);
+    stack[0].p = (uint16_t)(input_rank / ORIENTATIONS);
+    stack[0].o = (uint16_t)(input_rank % ORIENTATIONS);
     stack[0].next_move = 0;
     unsigned hp = position_dist[stack[0].p];
     unsigned ho = orientation_dist[stack[0].o];
@@ -144,7 +201,7 @@ int main(void)
         continue;
     }
 
-    /* 確定需要產生子狀態後，才解碼。 */
+    /* 通過同面剪枝後，以轉移表產生子狀態。 */
     ++generated;
 
         uint8_t face = move / 3;
