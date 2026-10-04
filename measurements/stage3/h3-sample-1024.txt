@@ -1,0 +1,12 @@
+Executed by Codex through local WSL.
+Transition checks=51921: PASS
+Tables loaded: position=5040, orientation=729 bytes
+Mode=SAMPLE ONLY, requested=1024, oracle_seconds=0.123
+Checked=1024, length_mismatches=0, replay_failures=0
+Validation wall seconds=0.124743
+Oracle + validation wall seconds=0.247800
+Attempted=25283074, generated=16868608, heuristic_pruned=14058928
+Largest generated count=270264 at rank=1148175
+Distance histogram: 0:1 1:0 2:0 3:0 4:0 5:5 6:11 7:68 8:226 9:542 10:168 11:3
+SAMPLE PASS (not full H3)
+Whole-process wall seconds=0.259189

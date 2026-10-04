@@ -1,0 +1,5 @@
+Executed by Codex through local WSL; original stage3_search.c retained.
+12345671111111: original/refactored complete stdout identical: PASS
+12345671111123: original/refactored complete stdout identical: PASS
+21345671111111: original/refactored complete stdout identical: PASS
+Invalid-input checks: PASS
