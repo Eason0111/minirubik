@@ -1,0 +1,4 @@
+Solved-state rank: 0
+dist[0]=0, dist[1]=255, pending=1
+Discovered=729, pending=0
+After BFS: dist[0]=0, missing=0, max=6
