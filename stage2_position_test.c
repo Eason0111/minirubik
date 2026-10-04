@@ -48,5 +48,19 @@ int main(void)
 
     printf("After BFS: dist[0]=%u, missing=%u, max=%u\n",
            (unsigned)dist[0], missing, max_distance);
+    FILE *out = fopen("measurements/stage2/position-dist.bin", "wb");
+    if (out == NULL) {
+        perror("open position distances");
+        return 1;
+    }
+
+    size_t written = fwrite(dist, sizeof dist[0], PERMUTATIONS, out);
+    int close_result = fclose(out);
+    if (written != PERMUTATIONS || close_result != 0) {
+        fputs("Failed to save position distances\n", stderr);
+        return 1;
+    }
+
+    printf("Saved %zu position distances\n", written);
     return rank == 0 ? 0 : 1;
 }

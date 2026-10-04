@@ -48,5 +48,19 @@ int main(void)
 
     printf("After BFS: dist[0]=%u, missing=%u, max=%u\n",
            (unsigned)dist[0], missing, max_distance);
+    FILE *out = fopen("measurements/stage2/orientation-dist.bin", "wb");
+    if (out == NULL) {
+        perror("open orientation distances");
+        return 1;
+    }
+
+    size_t written = fwrite(dist, sizeof dist[0], ORIENTATIONS, out);
+    int close_result = fclose(out);
+    if (written != ORIENTATIONS || close_result != 0) {
+        fputs("Failed to save orientation distances\n", stderr);
+        return 1;
+    }
+
+    printf("Saved %zu orientation distances\n", written);
     return rank == 0 ? 0 : 1;
 }
