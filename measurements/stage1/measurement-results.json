@@ -1,0 +1,145 @@
+{
+  "format": "stage1-measurements-v1",
+  "recorded_on": "2026-10-03",
+  "ripes_version": "v2.2.6-106-g5b8a616",
+  "memory": {
+    "samples_file": "memory-samples.csv",
+    "sources": {
+      "control": "memory-small-buffer.s",
+      "large": "memory-large-buffer.s"
+    },
+    "runs": [
+      {
+        "run_id": "small-1",
+        "original_summary_file": "control-20261003-150238-820-summary.json",
+        "original_summary": {
+          "Case": "control",
+          "RipesVersion": "v2.2.6-106-g5b8a616",
+          "Processor": "RV32_ISS",
+          "GuestBytes": 1024,
+          "SampleCount": 27,
+          "Last5PrivateBytesMean": 4804608,
+          "Last5PrivateBytesMin": 4804608,
+          "Last5PrivateBytesMax": 4804608,
+          "ExpectedTimeoutObserved": true,
+          "SamplesFile": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\control-20261003-150238-820-samples.csv",
+          "SourceSha256": "1E6A7343F44AB87F625B2B404707BAC3DEC2C95A3B864765C5E2BA06876A598D"
+        }
+      },
+      {
+        "run_id": "small-2",
+        "original_summary_file": "control-20261003-151014-121-summary.json",
+        "original_summary": {
+          "Case": "control",
+          "RipesVersion": "v2.2.6-106-g5b8a616",
+          "Processor": "RV32_ISS",
+          "GuestBytes": 1024,
+          "SampleCount": 26,
+          "Last5PrivateBytesMean": 4788224,
+          "Last5PrivateBytesMin": 4788224,
+          "Last5PrivateBytesMax": 4788224,
+          "ExpectedTimeoutObserved": true,
+          "SamplesFile": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\control-20261003-151014-121-samples.csv",
+          "SourceSha256": "1E6A7343F44AB87F625B2B404707BAC3DEC2C95A3B864765C5E2BA06876A598D"
+        }
+      },
+      {
+        "run_id": "small-3",
+        "original_summary_file": "control-20261003-151031-467-summary.json",
+        "original_summary": {
+          "Case": "control",
+          "RipesVersion": "v2.2.6-106-g5b8a616",
+          "Processor": "RV32_ISS",
+          "GuestBytes": 1024,
+          "SampleCount": 26,
+          "Last5PrivateBytesMean": 4784128,
+          "Last5PrivateBytesMin": 4784128,
+          "Last5PrivateBytesMax": 4784128,
+          "ExpectedTimeoutObserved": true,
+          "SamplesFile": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\control-20261003-151031-467-samples.csv",
+          "SourceSha256": "1E6A7343F44AB87F625B2B404707BAC3DEC2C95A3B864765C5E2BA06876A598D"
+        }
+      },
+      {
+        "run_id": "large-1",
+        "original_summary_file": "large-20261003-150455-196-summary.json",
+        "original_summary": {
+          "Case": "large",
+          "RipesVersion": "v2.2.6-106-g5b8a616",
+          "Processor": "RV32_ISS",
+          "GuestBytes": 1048576,
+          "SampleCount": 27,
+          "Last5PrivateBytesMean": 92549120,
+          "Last5PrivateBytesMin": 92549120,
+          "Last5PrivateBytesMax": 92549120,
+          "ExpectedTimeoutObserved": true,
+          "SamplesFile": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\large-20261003-150455-196-samples.csv",
+          "SourceSha256": "208223ADC69B5E56EB4DCCA2E79793301F453381CDB328CDCA2FF7B6456F8309"
+        }
+      },
+      {
+        "run_id": "large-2",
+        "original_summary_file": "large-20261003-151022-918-summary.json",
+        "original_summary": {
+          "Case": "large",
+          "RipesVersion": "v2.2.6-106-g5b8a616",
+          "Processor": "RV32_ISS",
+          "GuestBytes": 1048576,
+          "SampleCount": 26,
+          "Last5PrivateBytesMean": 92446720,
+          "Last5PrivateBytesMin": 92446720,
+          "Last5PrivateBytesMax": 92446720,
+          "ExpectedTimeoutObserved": true,
+          "SamplesFile": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\large-20261003-151022-918-samples.csv",
+          "SourceSha256": "208223ADC69B5E56EB4DCCA2E79793301F453381CDB328CDCA2FF7B6456F8309"
+        }
+      },
+      {
+        "run_id": "large-3",
+        "original_summary_file": "large-20261003-151040-211-summary.json",
+        "original_summary": {
+          "Case": "large",
+          "RipesVersion": "v2.2.6-106-g5b8a616",
+          "Processor": "RV32_ISS",
+          "GuestBytes": 1048576,
+          "SampleCount": 26,
+          "Last5PrivateBytesMean": 92524544,
+          "Last5PrivateBytesMin": 92524544,
+          "Last5PrivateBytesMax": 92524544,
+          "ExpectedTimeoutObserved": true,
+          "SamplesFile": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\large-20261003-151040-211-samples.csv",
+          "SourceSha256": "208223ADC69B5E56EB4DCCA2E79793301F453381CDB328CDCA2FF7B6456F8309"
+        }
+      }
+    ]
+  },
+  "speed": {
+    "source_file": "simulation-speed.s",
+    "runs": [
+      {
+        "original_report_file": "speed-iss-20261003-151933.json",
+        "original_report": {
+          "# instructions retired": 1048580,
+          "execution time (ms)": 401,
+          "runinfo": {
+            "ISA extensions": [],
+            "processor": "RV32_ISS",
+            "source file": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\speed-memory.s"
+          }
+        }
+      },
+      {
+        "original_report_file": "speed-5s-20261003-152125.json",
+        "original_report": {
+          "# instructions retired": 1048580,
+          "execution time (ms)": 7682,
+          "runinfo": {
+            "ISA extensions": [],
+            "processor": "RV32_5S",
+            "source file": "C:\\Users\\User\\Desktop\\HW1-Ripes-measurements\\speed-memory.s"
+          }
+        }
+      }
+    ]
+  }
+}

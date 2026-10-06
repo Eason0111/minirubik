@@ -3,3 +3,6 @@
 *.swp
 solver
 mini
+
+# Original Stage 1 logs remain local after consolidation.
+/measurements/ripes/

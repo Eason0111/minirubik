@@ -24,7 +24,8 @@ function Read-SharedLog {
 }
 
 $ripesExe = 'C:\Users\User\Desktop\Ripes-v2.2.6-106-g5b8a616-win-x86_64\Ripes.exe'
-$sourcePath = Join-Path $PSScriptRoot ("memory-{0}.s" -f $Case)
+$sourceFiles = @{ control = 'memory-small-buffer.s'; large = 'memory-large-buffer.s' }
+$sourcePath = Join-Path $PSScriptRoot $sourceFiles[$Case]
 $sourceText = Get-Content -LiteralPath $sourcePath -Raw
 $wordMatch = [regex]::Match($sourceText, 'li\s+t1,\s*(\d+)')
 if (-not $wordMatch.Success) { throw 'Could not identify the write count.' }
