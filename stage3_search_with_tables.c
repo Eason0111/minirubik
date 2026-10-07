@@ -109,9 +109,9 @@ int main(int argc, char **argv)
   unsigned long long attempted = 0;
     unsigned long long generated = 0;
     unsigned long long heuristic_pruned = 0;
-    if (!load_table("measurements/stage2/position-dist.bin",
+    if (!load_table("measurements/stage2/permutation-distances.bin",
                     position_dist, sizeof position_dist) ||
-        !load_table("measurements/stage2/orientation-dist.bin",
+        !load_table("measurements/stage2/orientation-distances.bin",
                     orientation_dist, sizeof orientation_dist)) {
         fputs("Could not load distance tables\n", stderr);
         return 1;

@@ -31,9 +31,9 @@ static int load_table(const char *name, uint8_t *data, size_t size)
 int main(void)
 {
     unsigned depth = 0;
-    if (!load_table("measurements/stage2/position-dist.bin",
+    if (!load_table("measurements/stage2/permutation-distances.bin",
                     position_dist, sizeof position_dist) ||
-        !load_table("measurements/stage2/orientation-dist.bin",
+        !load_table("measurements/stage2/orientation-distances.bin",
                     orientation_dist, sizeof orientation_dist)) {
         fputs("Could not load distance tables\n", stderr);
         return 1;
@@ -41,7 +41,7 @@ int main(void)
 
     printf("Tables loaded: position=%zu, orientation=%zu bytes\n",
            sizeof position_dist, sizeof orientation_dist);
-    /* 先用已解狀態測試根節點。 */
+    /* 固定未解測試狀態：p=0、o=1。 */
     stack[0].p = 0;
     stack[0].o = 1;
     stack[0].next_move = 0;

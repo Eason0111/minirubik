@@ -67,7 +67,7 @@ static void init_transitions(void)
 static int check_transitions(void)
 {
     unsigned checked = 0;
-        for (unsigned move = 0; move < MOVES; ++move) {
+    for (unsigned move = 0; move < MOVES; ++move) {
         if (move_face[move] != move / 3 ||
             move_turns[move] != move % 3 + 1) {
             fprintf(stderr, "Move mapping FAIL: move=%u\n", move);
@@ -117,7 +117,7 @@ static int check_transitions(void)
     return 1;
 }
 
-/* Host verification only: extracted from stage3_search.c without changing
+/* Host verification only: extracted from stage3_search_with_tables.c without changing
  * move order, pruning, or iterative-deepening bounds. */
 typedef struct {
     unsigned long long attempted, generated, heuristic_pruned;
@@ -339,15 +339,15 @@ int main(int argc, char **argv)
     } else if (!full) {
         const char *input = argc == 2 ? argv[1] : "12345671111123";
         if (argc > 2 || !parse_state(input, &start)) {
-            fputs("Usage: stage3_batch [STATE | --sample N | --h3]\n", stderr);
+            fputs("Usage: stage3_search_with_move_lookup [STATE | --sample N | --h3]\n", stderr);
             return 2;
         }
     }
     init_transitions();
     if (!check_transitions()) return 1;
-    if (!load_table("measurements/stage2/position-dist.bin", position_dist,
+    if (!load_table("measurements/stage2/permutation-distances.bin", position_dist,
                     sizeof position_dist) ||
-        !load_table("measurements/stage2/orientation-dist.bin", orientation_dist,
+        !load_table("measurements/stage2/orientation-distances.bin", orientation_dist,
                     sizeof orientation_dist) || !check_distances()) {
         fputs("Invalid distance tables\n", stderr);
         return 1;

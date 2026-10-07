@@ -22,9 +22,9 @@ int main(void)
 {
     uint8_t pd[PERMUTATIONS], od[ORIENTATIONS];
 
-    if (!read_table("measurements/stage2/position-dist.bin",
+    if (!read_table("measurements/stage2/permutation-distances.bin",
                     pd, sizeof pd) ||
-        !read_table("measurements/stage2/orientation-dist.bin",
+        !read_table("measurements/stage2/orientation-distances.bin",
                     od, sizeof od)) {
         fputs("Could not read distance tables\n", stderr);
         return 1;

@@ -21,20 +21,20 @@ int main(void)
     printf("dist[0]=%u, dist[1]=%u, pending=%u\n",
            (unsigned)dist[0], (unsigned)dist[1], tail - head);
     while (head < tail) {
-    uint16_t here = queue[head++];
-    unrank_state(here, &state);
+        uint16_t here = queue[head++];
+        unrank_state(here, &state);
 
-    for (uint8_t move = 0; move < MOVES; ++move) {
-        state_t next = apply_move(state, move);
-        uint16_t there =
-            (uint16_t)(rank_state(&next) % ORIENTATIONS);
-        if (dist[there] == UINT8_MAX) {
-            dist[there] = dist[here] + 1;
-            queue[tail++] = there;
+        for (uint8_t move = 0; move < MOVES; ++move) {
+            state_t next = apply_move(state, move);
+            uint16_t there =
+                (uint16_t)(rank_state(&next) % ORIENTATIONS);
+            if (dist[there] == UINT8_MAX) {
+                dist[there] = dist[here] + 1;
+                queue[tail++] = there;
             }
-    	}
+        }
     }
-        printf("Discovered=%u, pending=%u\n", tail, tail - head);
+    printf("Discovered=%u, pending=%u\n", tail, tail - head);
     unsigned missing = 0;
     unsigned max_distance = 0;
 
@@ -48,7 +48,12 @@ int main(void)
 
     printf("After BFS: dist[0]=%u, missing=%u, max=%u\n",
            (unsigned)dist[0], missing, max_distance);
-    FILE *out = fopen("measurements/stage2/orientation-dist.bin", "wb");
+    if (rank != 0 || tail != ORIENTATIONS || missing != 0 ||
+        dist[0] != 0 || max_distance != 6) {
+        fputs("Orientation distance validation failed\n", stderr);
+        return 1;
+    }
+    FILE *out = fopen("measurements/stage2/orientation-distances.bin", "wb");
     if (out == NULL) {
         perror("open orientation distances");
         return 1;
@@ -62,5 +67,5 @@ int main(void)
     }
 
     printf("Saved %zu orientation distances\n", written);
-    return rank == 0 ? 0 : 1;
+    return 0;
 }
