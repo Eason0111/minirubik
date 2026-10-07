@@ -6,3 +6,19 @@ mini
 
 # Original Stage 1 logs remain local after consolidation.
 /measurements/ripes/
+/stage4/.local-backups/
+/stage4/__pycache__/
+/stage4/.ripes-check-*/
+/stage4/.gcc-compare-*/
+/stage4/.package-check-*/
+/measurements/stage4/gcc-comparison.csv
+/measurements/stage4/gcc-comparison.txt
+/measurements/stage4/iss-case11.txt
+/measurements/stage4/replay-p0-o1.txt
+/measurements/stage4/ripes-four-cases.csv
+/measurements/stage4/ripes-four-cases.txt
+/measurements/stage4/ripes-register-cache-selected-cases.csv
+/measurements/stage4/ripes-register-cache-selected-cases.txt
+/measurements/stage4/ripes-target-replay-selected-cases.csv
+/measurements/stage4/ripes-target-replay-selected-cases.txt
+/measurements/stage4/search-size-report.txt
