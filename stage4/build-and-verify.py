@@ -135,7 +135,7 @@ def test_main():
         prospective = ROOT / f"measurements/stage4/ripes-{args.label}-all11.txt"
         if prospective.exists():
             raise SystemExit("Preserve existing logs or choose a new --label")
-    source = ROOT / "stage4/search.s"
+    source = ROOT / "stage4/solve-cube-rv32i.s"
     text = source.read_text(encoding="utf-8-sig")
     input_pattern = r'(?m)^[ \t]*input_state:[ \t]*\.asciz[ \t]*"[^"]*"'
     if len(re.findall(input_pattern, text)) != 1:
@@ -207,7 +207,7 @@ def test_main():
                     "replay_final_rank", "within_budget"
                 ])
                 rawfile.write(
-                    "search.s SHA256: " +
+                    source.name + " SHA256: " +
                     hashlib.sha256(source.read_bytes()).hexdigest() + "\n"
                 )
                 rawfile.write(
@@ -376,7 +376,7 @@ def compare_main():
             raw.write('Flags: '+' '.join(FLAGS)+'\nRenderer absent in both variants.\n')
             raw.write('C adaptation: same search, no host counters; split input coordinates; pointer table bases.\n')
             raw.write('Both variants include input validation, matching output, and independent cubie replay. Renderer absent.\n')
-            for f in [HERE/'gcc-reference.c',tables_path,ROOT/'stage4/search.s',ROOT/'stage3_search_with_move_lookup.c',ROOT/'solver.c']:
+            for f in [HERE/'solve-cube-gcc-reference.c',tables_path,ROOT/'stage4/solve-cube-rv32i.s',ROOT/'stage3_search_with_move_lookup.c',ROOT/'solver.c']:
                 raw.write(f'{f.name} SHA256={hashlib.sha256(f.read_bytes()).hexdigest()}\n')
             writer=csv.writer(cf)
             writer.writerow(['state','variant','depth','iret','text_bytes','static_bytes','replay'])
@@ -386,9 +386,9 @@ def compare_main():
                     if variant=='gcc':
                         inp=tmp/'input.s'
                         inp.write_text(f'.section .rodata\n.globl input_state\ninput_state: .asciz "{state}"\n')
-                        sources=[HERE/'gcc-reference.c',tables_path,inp]
+                        sources=[HERE/'solve-cube-gcc-reference.c',tables_path,inp]
                     else:
-                        source=(ROOT/'stage4/search.s').read_text(encoding='utf-8-sig')
+                        source=(ROOT/'stage4/solve-cube-rv32i.s').read_text(encoding='utf-8-sig')
                         source,n=re.subn(r'(?m)^\s*input_state:\s*\.asciz\s*"[^"]*"',f'input_state: .asciz "{state}"',source)
                         assert n==1
                         source,n=re.subn(r'(?m)^main:', '.globl main\nmain:',source)
@@ -434,10 +434,10 @@ def build_led_main():
     args=parser.parse_args()
     assert 0<=args.delay<=100000000
     root=ROOT
-    source=(root/'stage4/search.s').read_text(encoding='utf-8-sig')
+    source=(root/'stage4/solve-cube-rv32i.s').read_text(encoding='utf-8-sig')
     assert 'replay_cubie_loop:' in source, 'Install target replay first'
-    out=args.output or root/'stage4/search-led.s'
-    assert out.resolve() != (root/'stage4/search.s').resolve(), 'Keep the measured source intact'
+    out=args.output or root/'stage4/solve-cube-led-rv32i.s'
+    assert out.resolve() != (root/'stage4/solve-cube-rv32i.s').resolve(), 'Keep the measured source intact'
 
     # Coordinates: +x right, +y up, +z front. Corner 7 is fixed ULF.
     coords=[(1,1,1),(1,-1,1),(-1,-1,1),(1,1,-1),(1,-1,-1),(-1,-1,-1),(-1,1,-1),(-1,1,1)]
@@ -602,11 +602,11 @@ def build_led_main():
 
 
 def reference_tables():
-    """Export the ten precomputed arrays already embedded in search.s."""
-    source=(ROOT/'stage4/search.s').read_text(encoding='utf-8-sig')
+    """Export the ten precomputed arrays already embedded in solve-cube-rv32i.s."""
+    source=(ROOT/'stage4/solve-cube-rv32i.s').read_text(encoding='utf-8-sig')
     marker='\n.data\ntrying_msg:'
     if source.count(marker)!=1:
-        raise RuntimeError('Unexpected table boundary in search.s')
+        raise RuntimeError('Unexpected table boundary in solve-cube-rv32i.s')
     tables=source.split(marker,1)[0]
     labels=re.findall(r'(?m)^(\w+):',tables)
     expected=['perm_R','orient_R','perm_B','orient_B','perm_D','orient_D',
@@ -617,23 +617,23 @@ def reference_tables():
 
 def check_results():
     logs=ROOT/'measurements/stage4'
-    digest=hashlib.sha256((ROOT/'stage4/search.s').read_bytes()).hexdigest()
-    raw=(logs/'ripes-final-all11.txt').read_text(encoding='utf-8')
-    if f'search.s SHA256: {digest}' not in raw or 'Checked=2644/2644' not in raw:
+    digest=hashlib.sha256((ROOT/'stage4/solve-cube-rv32i.s').read_bytes()).hexdigest()
+    raw=(logs/'ripes-final-distance11-validation.txt').read_text(encoding='utf-8')
+    if not any(f'{name} SHA256: {digest}' in raw for name in ['search.s', 'solve-cube-rv32i.s']) or 'Checked=2644/2644' not in raw:
         raise RuntimeError('Final target log is incomplete or source hash differs')
-    with (logs/'ripes-final-all11.csv').open(newline='') as f:
+    with (logs/'ripes-final-distance11-validation.csv').open(newline='') as f:
         rows=list(csv.DictReader(f))
     assert len(rows)==2644 and len({r['state'] for r in rows})==2644
     assert all(int(r['expected_depth'])==int(r['actual_depth'])==11
                and int(r['replay_final_rank'])==0 and int(r['instructions_retired'])<=BUDGET for r in rows)
-    with (logs/'gcc-comparison-final.csv').open(newline='') as f:
+    with (logs/'gcc-vs-assembly-comparison.csv').open(newline='') as f:
         comparisons=list(csv.DictReader(f))
     assert len(comparisons)==10
     assert all(r['replay']=='PASS' and int(r['static_bytes'])<=131072 for r in comparisons)
-    gcc_raw=(logs/'gcc-comparison-final.txt').read_text(encoding='utf-8')
-    for f in ['search.s','gcc-reference.c']:
-        sha=hashlib.sha256((ROOT/'stage4'/f).read_bytes()).hexdigest()
-        assert f'{f} SHA256={sha}' in gcc_raw
+    gcc_raw=(logs/'gcc-vs-assembly-comparison.txt').read_text(encoding='utf-8')
+    for current, historical in [('solve-cube-rv32i.s', 'search.s'), ('solve-cube-gcc-reference.c', 'gcc-reference.c')]:
+        sha=hashlib.sha256((ROOT/'stage4'/current).read_bytes()).hexdigest()
+        assert any(f'{name} SHA256={sha}' in gcc_raw for name in [current, historical])
     print('Source hashes, 2644 target cases, budget, and 10 GCC comparison records: PASS')
     print('Final maximum:',max(int(r['instructions_retired']) for r in rows))
 
@@ -644,14 +644,14 @@ def check_package():
             dest=tmp/f'{mode}.s'
             sys.argv=[str(__file__),'--renderer',mode,'--output',str(dest)]
             build_led_main()
-            expected=HERE/('search-led.s' if mode=='on' else 'search.s')
+            expected=HERE/('solve-cube-led-rv32i.s' if mode=='on' else 'solve-cube-rv32i.s')
             assert dest.read_bytes()==expected.read_bytes(), f'{mode} output differs'
         tables=tmp/'tables.s'
         tables.write_text(reference_tables(),encoding='utf-8')
         inp=tmp/'input.s'
         inp.write_text('.section .rodata\n.globl input_state\ninput_state: .asciz "12345671111111"\n')
         elf=tmp/'gcc.elf'
-        run(['riscv64-unknown-elf-gcc',*FLAGS,HERE/'gcc-reference.c',tables,inp,'-o',elf])
+        run(['riscv64-unknown-elf-gcc',*FLAGS,HERE/'solve-cube-gcc-reference.c',tables,inp,'-o',elf])
         assert not run(['riscv64-unknown-elf-nm','-u',elf]).strip()
         text,static,_=sizes(elf)
         assert (text,static)==(1652,40768), (text,static)
@@ -662,7 +662,7 @@ def main():
     commands={'test':test_main,'compare':compare_main,'build-led':build_led_main,
               'check-results':check_results,'check-package':check_package}
     if len(sys.argv)<2 or sys.argv[1] not in commands:
-        raise SystemExit('Usage: verify.py {test|compare|build-led|check-results|check-package} [options]')
+        raise SystemExit('Usage: build-and-verify.py {test|compare|build-led|check-results|check-package} [options]')
     command=sys.argv.pop(1)
     commands[command]()
 

@@ -4,6 +4,18 @@ An optimal C99 solver for the 2×2×2 Rubik’s Cube. It builds a breadth-first
 table for all 3,674,160 states and solves every valid position in at most 11
 half-turn-metric moves.
 
+## Homework files
+
+| Stage | Files and purpose |
+|---|---|
+| 1 | [Memory and simulator-speed measurements](measurements/stage1/README.md) |
+| 2 | `stage2_build_*_distances.c`: build coordinate distances; `stage2_verify_heuristic.c`: check admissibility; `stage2_search_prototype.c`: explicit-stack search. [Evidence](measurements/stage2/README.md) |
+| 3 | `stage3_search_with_tables.c`: transition-table search; `stage3_search_with_move_lookup.c`: final C search with face/turn lookup. [Evidence](measurements/stage3/README.md) |
+| 4 | [RV32I solver, LED replay, GCC reference, and build/verification tool](stage4/README.md) |
+| 4 results | [Measured instruction counts and validation records](measurements/stage4) |
+
+`solver.c`, `mini.c`, and `report.md` are the original upstream baseline files. The homework implementations and measurements are indexed above.
+
 ## Why a cube is a graph
 
 Ernő Rubik created the original cube in 1974 to demonstrate how parts can move
